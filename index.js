@@ -6,15 +6,28 @@ class Transaction {
   }
 
   commit() {
-    this.time = new Date();
-    this.account.addTransaction(this);
+    if (this.isAllowed()) {
+      this.time = new Date();
+      this.account.addTransaction(this);
+    }
+
+    return this.isAllowed();
   }
+
+  isAllowed() {
+    return true;
+  }
+
 }
 
 class Withdrawal extends Transaction {
 
   get value() {
     return 0 - this.amount;
+  }
+
+  isAllowed() {
+    return this.account.balance > this.amount;
   }
 
 }
@@ -65,3 +78,10 @@ console.log('Transaction 3:', t3);
 
 console.log('Transactions:', myAccount.transactions);
 console.log('Balance: ', myAccount.balance);
+
+const t4 = new Withdrawal(5, myAccount);
+t4.commit();
+console.log('Transaction 4', t4);
+
+console.log('Transactions:', myAccount.transactions);
+console.log('Balance:', myAccount.balance);
