@@ -12,7 +12,17 @@ class Withdrawal {
 
 }
 
+class Deposit {
 
+  constructor(amount) {
+    this.amount = amount;
+  }
+
+  commit() {
+    balance += this.amount;
+  }
+
+}
 
 
 // DRIVER CODE BELOW
@@ -25,5 +35,9 @@ console.log('Transaction 1:', t1);
 const t2 = new Withdrawal(9.99);
 t2.commit();
 console.log('Transaction 2:', t2);
+
+const t3 = new Deposit(120);
+t3.commit();
+console.log('Transaction 3:', t3);
 
 console.log('Balance:', balance);
