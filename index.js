@@ -1,4 +1,4 @@
-class Withdrawal {
+class Transaction {
 
   constructor(amount, account) {
     this.amount = amount;
@@ -6,20 +6,23 @@ class Withdrawal {
   }
 
   commit() {
-    this.account.balance -= this.amount;
+    this.time = new Date();
+    this.account.addTransaction(this);
+  }
+}
+
+class Withdrawal extends Transaction {
+
+  get value() {
+    return 0 - this.amount;
   }
 
 }
 
-class Deposit {
+class Deposit extends Transaction {
 
-  constructor(amount, account) {
-    this.amount = amount;
-    this.account = account;
-  }
-
-  commit() {
-    this.account.balance += this.amount;
+  get value() {
+    return this.amount;
   }
 
 }
@@ -28,7 +31,17 @@ class Account {
 
   constructor(username) {
     this.username = username;
-    this.balance = 0;
+    this.transactions = [];
+  }
+
+  get balance() {
+    return this.transactions.reduce((bal, t) => {
+      return bal + t.value;
+    }, 0);
+  }
+
+  addTransaction(transaction) {
+    this.transactions.push(transaction);
   }
 
 }
@@ -49,3 +62,6 @@ console.log('Transaction 2:', t2);
 const t3 = new Deposit(120, myAccount);
 t3.commit();
 console.log('Transaction 3:', t3);
+
+console.log('Transactions:', myAccount.transactions);
+console.log('Balance: ', myAccount.balance);
